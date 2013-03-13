@@ -11,3 +11,9 @@
  *= require_self
  *= require_tree .
  */
+
+#selected-components li, #available-components li {
+  width: 200px;
+  border: 1px solid black;
+  padding: 20px;
+}

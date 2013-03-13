@@ -31,14 +31,18 @@
 
   var COMPONENTS = <%=raw Components.all.inject({}) {|hash, component| hash[component.humanized_name.to_s] = component.options; hash }.to_json %>
 
-  function addComponent(componentName) {
+  function addComponent(componentName, filledInOptions) {
     var str = '<li><span class="component-name">' + componentName + '</span> <a href="#" class="remove-component">x</a>'
     var options = COMPONENTS[componentName];
     if(options.length > 0) {
       str += '<p>'
       $.each(options, function(index, option) {
         str += option + ': '
-        str += '<input type="text" name="' + option + '" />'
+        str += '<input type="text" name="' + option + '" '
+        if(filledInOptions && filledInOptions[option]) {
+          str += 'value="' + filledInOptions[option] + '" '
+        }
+        str += '/>'
       })
       str += '</p>'
     }
@@ -53,7 +57,7 @@
 
   $(document).ready(function() {
     <% @template.components.each do |component| %>
-      addComponent(<%=raw component.class.humanized_name.to_json %>);
+      addComponent(<%=raw component.class.humanized_name.to_json %>, <%=raw component.options.to_json %>);
     <% end %>
 
     $('#available-components li a').click(function() {

@@ -4,6 +4,7 @@ module Components
       self.name.sub("Components::", "")
     end
 
+    attr_reader :options
     def initialize(options = {})
       @options = options
     end

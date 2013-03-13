@@ -20,9 +20,6 @@
 
   <h2>Selected components</h2>
   <ul id="selected-components">
-    <% @template.components.each do |component| %>
-      <li><span class="component-name"><%= component.class.humanized_name %></span> <a href="#" class="remove-component">x</a></li>
-    <% end %>
   </ul>
 
   <div class="actions">
@@ -32,8 +29,7 @@
 
 <%= javascript_tag do %>
 
-  function addComponent(component) {
-    var componentName = component.find('.component-name').first().text();
+  function addComponent(componentName) {
     var el = $('<li><span class="component-name">' + componentName + '</span> <a href="#" class="remove-component">x</a></li>');
     $('#selected-components').append(el);
   }
@@ -43,13 +39,20 @@
   }
 
   $(document).ready(function() {
+    <% @template.components.each do |component| %>
+      addComponent(<%=raw component.class.humanized_name.to_json %>);
+    <% end %>
+
     $('#available-components li a').click(function() {
-      addComponent($(this).parent('li'))
+      addComponent($(this).parent('li').find('.component-name').text())
     })
+
     $('#selected-components li a.remove-component').click(function() {
       removeComponent($(this).parent('li'));
     });
+
     $('#selected-components').sortable();
+
     $('.edit_template').submit(function(event) {
       event.preventDefault();
 

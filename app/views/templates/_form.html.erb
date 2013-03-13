@@ -29,8 +29,21 @@
 
 <%= javascript_tag do %>
 
+  var COMPONENTS = <%=raw Components.all.inject({}) {|hash, component| hash[component.humanized_name.to_s] = component.options; hash }.to_json %>
+
   function addComponent(componentName) {
-    var el = $('<li><span class="component-name">' + componentName + '</span> <a href="#" class="remove-component">x</a></li>');
+    var str = '<li><span class="component-name">' + componentName + '</span> <a href="#" class="remove-component">x</a>'
+    var options = COMPONENTS[componentName];
+    if(options.length > 0) {
+      str += '<p>'
+      $.each(options, function(index, option) {
+        str += option + ': '
+        str += '<input type="text" name="' + option + '" />'
+      })
+      str += '</p>'
+    }
+    str += '</li>'
+    var el = $(str);
     $('#selected-components').append(el);
   }
 
@@ -58,10 +71,15 @@
 
       var components = [];
       $('#selected-components li').each(function(index, el) {
-        components.push($(el).find('.component-name').text())
+        var data = {};
+        data["class"] = $(el).find('.component-name').text();
+        data["options"] = {};
+        $(el).find('input').each(function(index, el) {
+          data["options"][$(el).attr("name")] = $(el).val()
+        });
+        components.push(data)
       });
 
-      console.log($(this).attr("action"))
       $.ajax($(this).attr("action"), {
         type: 'PUT',
         data: {

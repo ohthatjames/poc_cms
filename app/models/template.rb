@@ -5,13 +5,16 @@ class Template < ActiveRecord::Base
   def components
     content.map do |component_options|
       klass = component_options["class"].constantize
-      component = klass.new
+      component = klass.new(component_options["options"])
     end
   end
 
   def components=(components)
-    content = components.map do |component|
-      {"class" => "Components::" + component}
+    content = components.sort_by {|k, v| k.to_i}.map do |component_hash|
+      {
+        "class" => "Components::" + component_hash.last["class"],
+        "options" => component_hash.last["options"]
+      }
     end
     write_attribute(:content, content)
   end

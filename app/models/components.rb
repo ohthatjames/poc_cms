@@ -1,5 +1,5 @@
 module Components
   def self.all
-    [HelloWorld, LoremIpsum]
+    [HelloWorld, LoremIpsum, RandomText]
   end
 end

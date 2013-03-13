@@ -64,7 +64,7 @@
       addComponent($(this).parent('li').find('.component-name').text())
     })
 
-    $('#selected-components li a.remove-component').click(function() {
+    $(document).on('click', '#selected-components li a.remove-component', function() {
       removeComponent($(this).parent('li'));
     });
 

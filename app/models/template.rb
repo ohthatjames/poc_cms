@@ -3,7 +3,7 @@ class Template < ActiveRecord::Base
   serialize :content, JSON
 
   def components
-    JSON.parse(content).map do |component_options|
+    content.map do |component_options|
       klass = component_options["class"].constantize
       component = klass.new
     end
@@ -13,7 +13,7 @@ class Template < ActiveRecord::Base
     content = components.map do |component|
       {"class" => "Components::" + component}
     end
-    write_attribute(:content, content.to_json)
+    write_attribute(:content, content)
   end
 
   def render(category)

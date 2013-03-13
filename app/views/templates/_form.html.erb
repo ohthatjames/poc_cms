@@ -21,7 +21,7 @@
   <h2>Selected components</h2>
   <ul id="selected-components">
     <% @template.components.each do |component| %>
-      <li><%= component.class.humanized_name %></li>
+      <li><span class="component-name"><%= component.class.humanized_name %></span> <a href="#" class="remove-component">x</a></li>
     <% end %>
   </ul>
 
@@ -34,21 +34,28 @@
 
   function addComponent(component) {
     var componentName = component.find('.component-name').first().text();
-    var el = $('<li>' + componentName + "</li>");
+    var el = $('<li><span class="component-name">' + componentName + '</span> <a href="#" class="remove-component">x</a></li>');
     $('#selected-components').append(el);
+  }
+
+  function removeComponent(component) {
+    component.remove();
   }
 
   $(document).ready(function() {
     $('#available-components li a').click(function() {
       addComponent($(this).parent('li'))
     })
+    $('#selected-components li a.remove-component').click(function() {
+      removeComponent($(this).parent('li'));
+    });
     $('#selected-components').sortable();
     $('.edit_template').submit(function(event) {
       event.preventDefault();
 
       var components = [];
       $('#selected-components li').each(function(index, el) {
-        components.push($(el).text())
+        components.push($(el).find('.component-name').text())
       });
 
       console.log($(this).attr("action"))

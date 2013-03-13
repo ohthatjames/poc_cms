@@ -11,7 +11,56 @@
     </div>
   <% end %>
 
+  <h2>Available components</h2>
+  <ul id="available-components">
+    <% Components.all.each do |component| %>
+      <li><span class="component-name"><%= component.humanized_name.to_s %></span> <%= link_to "Add", "#" %></li>
+    <% end %>
+  </ul>
+
+  <h2>Selected components</h2>
+  <ul id="selected-components">
+    <% @template.components.each do |component| %>
+      <li><%= component.class.humanized_name %></li>
+    <% end %>
+  </ul>
+
   <div class="actions">
     <%= f.submit %>
   </div>
+<% end %>
+
+<%= javascript_tag do %>
+
+  function addComponent(component) {
+    var componentName = component.find('.component-name').first().text();
+    var el = $('<li>' + componentName + "</li>");
+    $('#selected-components').append(el);
+  }
+
+  $(document).ready(function() {
+    $('#available-components li a').click(function() {
+      addComponent($(this).parent('li'))
+    })
+    $('#selected-components').sortable();
+    $('.edit_template').submit(function(event) {
+      event.preventDefault();
+
+      var components = [];
+      $('#selected-components li').each(function(index, el) {
+        components.push($(el).text())
+      });
+
+      console.log($(this).attr("action"))
+      $.ajax($(this).attr("action"), {
+        type: 'PUT',
+        data: {
+          template: {
+            components: components
+          }
+        }
+      })
+      return false;
+    })
+  })
 <% end %>

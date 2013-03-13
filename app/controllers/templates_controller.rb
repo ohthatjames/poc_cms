@@ -1,4 +1,5 @@
 class TemplatesController < ApplicationController
+  skip_before_filter :verify_authenticity_token
   # GET /templates
   # GET /templates.json
   def index

@@ -6,4 +6,5 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Category.create([{:name => "Category 1"}, {:name => "Category 2"}, {:name => "Category 3"}])
+template_1 = Template.create(:name => "Template 1", :content => ["class" => "Components::HelloWorld"])
+Category.create([{:name => "Category 1", :template => template_1}, {:name => "Category 2", :template => template_1}, {:name => "Category 3", :template => template_1}])
